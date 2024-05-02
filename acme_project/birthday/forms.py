@@ -1,5 +1,9 @@
 from django import forms
 from birthday.models import Birthday, Contest
+from django.core.exceptions import ValidationError
+
+
+BEATLES = {'Джон Леннон', 'Пол Маккартни', 'Джордж Харрисон', 'Ринго Старр'}
 
 
 class BirthdayForm(forms.ModelForm):
@@ -10,11 +14,25 @@ class BirthdayForm(forms.ModelForm):
         widgets = {
             'birthday': forms.DateInput(attrs={'type': 'date'})
         }
-    # first_name = models.CharField('Имя', max_length=20)
-    # last_name = models.CharField('Фамилия', blank=True,
-    #                              help_text='Необязательное поле',
-    #                              max_length=20)
-    # birthday = models.DateField('Дата рождения')
+
+    def clean_first_name(self):
+        # Получаем значение имени из словаря очищенных данных.
+        first_name = self.cleaned_data['first_name']
+        # Разбиваем полученную строку по пробелам 
+        # и возвращаем только первое имя.
+        return first_name.split()[0]
+
+    def clean(self):
+        super().clean()
+        # Получаем имя и фамилию из очищенных полей формы.
+        first_name = self.cleaned_data['first_name']
+        last_name = self.cleaned_data['last_name']
+        # Проверяем вхождение сочетания имени и фамилии во множество имён.
+        if f'{first_name} {last_name}' in BEATLES:
+            raise ValidationError(
+                'Мы тоже любим Битлз, но введите, пожалуйста, настоящее имя!'
+            )
+
 
 
 class ContestForm(forms.ModelForm):
@@ -26,10 +44,4 @@ class ContestForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'cols': '22', 'rows': '5'}),
             'comment': forms.Textarea(attrs={'cols': '22', 'rows': '5'})
         }
-    # title = forms.CharField(label='Название', max_length=20)
-    # description = forms.CharField(label='Описание',
-    #                               widget=forms.Textarea(attrs={'rows': '5'}))
-    # price = forms.IntegerField(min_value=10, max_value=100, label='Цена',
-    #                            help_text='Рекомендованная розничная цена')
-    # comment = forms.CharField(required=False, label='Комментарий',
-    #                           widget=forms.Textarea(attrs={'rows': '3'}))
+
