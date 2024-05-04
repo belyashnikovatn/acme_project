@@ -1,34 +1,42 @@
 from django.views.generic import (
     CreateView, DeleteView, DetailView, ListView, UpdateView
 )
-from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from birthday.forms import BirthdayForm
 from birthday.models import Birthday
 from birthday.utils import calculate_birthday_countdown
 
 
-class BirthdayListView(ListView):
+@login_required
+def simple_view(request):
+    return HttpResponse('Страница для залогиненных пользователей!')
+
+
+class BirthdayListView(LoginRequiredMixin, ListView):
     model = Birthday
     ordering = 'id'
     paginate_by = 3
 
 
-class BirthdayCreateView(CreateView):
+class BirthdayCreateView(LoginRequiredMixin, CreateView):
     model = Birthday
     form_class = BirthdayForm
 
 
-class BirthdayUpdateView(UpdateView):
+class BirthdayUpdateView(LoginRequiredMixin, UpdateView):
     model = Birthday
     form_class = BirthdayForm
 
 
-class BirthdayDelete(DeleteView):
+class BirthdayDelete(LoginRequiredMixin, DeleteView):
     model = Birthday
 
 
-class BirthdayDetailView(DetailView):
+class BirthdayDetailView(LoginRequiredMixin, DetailView):
     model = Birthday
 
     def get_context_data(self, **kwargs):
