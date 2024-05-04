@@ -13,9 +13,11 @@
       <div>
         <b>{{ birthday.id }}</b> | {{ birthday.first_name }} {{ birthday.last_name }} - {{ birthday.birthday }}
       </div>
+      {% if birthday.author == user %}
       <div>
         <a href="{% url 'birthday:edit' birthday.id %}" >Изменить</a> | <a href="{% url 'birthday:delete' birthday.id %}" >Удалить</a> | <a href="{% url 'birthday:detail' birthday.id %}">Сколько до дня рождения?</a>
       </div>
+      {% endif %}
     </div>
       {% if not forloop.last %}
       <hr class="mt-3">

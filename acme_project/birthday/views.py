@@ -3,7 +3,8 @@ from django.views.generic import (
 )
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 
 
 from birthday.forms import BirthdayForm
@@ -11,9 +12,11 @@ from birthday.models import Birthday
 from birthday.utils import calculate_birthday_countdown
 
 
-@login_required
-def simple_view(request):
-    return HttpResponse('Страница для залогиненных пользователей!')
+class OnlyAuthorMixin(UserPassesTestMixin):
+
+    def test_func(self):
+        object = self.get_object()
+        return object.author == self.request.user
 
 
 class BirthdayListView(LoginRequiredMixin, ListView):
@@ -26,13 +29,19 @@ class BirthdayCreateView(LoginRequiredMixin, CreateView):
     model = Birthday
     form_class = BirthdayForm
 
+    def form_valid(self, form):
+        # Присвоить полю author объект пользователя из запроса.
+        form.instance.author = self.request.user
+        # Продолжить валидацию, описанную в форме.
+        return super().form_valid(form)
 
-class BirthdayUpdateView(LoginRequiredMixin, UpdateView):
+
+class BirthdayUpdateView(OnlyAuthorMixin, UpdateView):
     model = Birthday
     form_class = BirthdayForm
 
 
-class BirthdayDelete(LoginRequiredMixin, DeleteView):
+class BirthdayDelete(OnlyAuthorMixin, DeleteView):
     model = Birthday
 
 
