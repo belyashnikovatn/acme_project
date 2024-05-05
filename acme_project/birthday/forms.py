@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 
-from birthday.models import Birthday, Contest
+from birthday.models import Birthday, Congratulation
 
 
 BEATLES = {'Джон Леннон', 'Пол Маккартни', 'Джордж Харрисон', 'Ринго Старр'}
@@ -44,14 +44,8 @@ class BirthdayForm(forms.ModelForm):
             )
 
 
-
-class ContestForm(forms.ModelForm):
-
+class CongratulationForm(forms.ModelForm):
+    
     class Meta:
-        model = Contest
-        fields = '__all__'
-        widgets = {
-            'description': forms.Textarea(attrs={'cols': '22', 'rows': '5'}),
-            'comment': forms.Textarea(attrs={'cols': '22', 'rows': '5'})
-        }
-
+        model = Congratulation
+        fields = ('text',) 

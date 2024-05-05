@@ -33,13 +33,15 @@ class Birthday(models.Model):
         return reverse('birthday:detail', kwargs={'pk': self.pk})
 
 
-class Contest(models.Model):
-    title = models.CharField('Название', max_length=20)
-    description = models.TextField('Описание')
-    price = models.IntegerField('Цена',
-                                validators=[
-                                    MinValueValidator(10),
-                                    MaxValueValidator(100)
-                                    ],
-                                help_text='Рекомендованная розничная цена')
-    comment = models.TextField('Комментарий', blank=True)
+class Congratulation(models.Model):
+    text = models.TextField('Текст поздравления')
+    birthday = models.ForeignKey(
+        Birthday,
+        on_delete=models.CASCADE,
+        related_name='congratulations',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('created_at',) 
