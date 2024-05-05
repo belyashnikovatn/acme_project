@@ -21,8 +21,11 @@ class OnlyAuthorMixin(UserPassesTestMixin):
 
 class BirthdayListView(LoginRequiredMixin, ListView):
     model = Birthday
+    queryset = Birthday.objects.prefetch_related('tags').select_related(
+        'author'
+    )
     ordering = 'id'
-    paginate_by = 3
+    paginate_by = 5
 
 
 class BirthdayCreateView(LoginRequiredMixin, CreateView):

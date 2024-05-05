@@ -45,7 +45,7 @@ class BirthdayForm(forms.ModelForm):
 
 
 class CongratulationForm(forms.ModelForm):
-    
+
     class Meta:
         model = Congratulation
-        fields = ('text',) 
+        fields = ('text',)
