@@ -1,13 +1,10 @@
 from pathlib import Path
 
-CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
-
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-m&$lzdzkutvrbr5vt=jpm)7#g7cken_tk%($ty+w902n7wb#=e'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -39,9 +36,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-INTERNAL_IPS = [
-'127.0.0.1',
-]
+INTERNAL_IPS = ['127.0.0.1',]
 
 ROOT_URLCONF = 'acme_project.urls'
 
@@ -109,4 +104,4 @@ EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 
 LOGIN_REDIRECT_URL = 'pages:homepage'
 LOGIN_URL = 'login'
-
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'

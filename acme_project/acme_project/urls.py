@@ -5,11 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from django.urls import include, path, reverse_lazy
 
+handler403 = 'core.views.csrf_failure'
 handler404 = 'core.views.page_not_found'
-
-
-
-
 
 urlpatterns = [
     path('auth/', include('django.contrib.auth.urls')),
